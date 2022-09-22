@@ -1,0 +1,11 @@
+{
+	"extends": [
+		"tslint:recommended",
+		"tslint-config-prettier"
+	],
+	"rules": {
+		"comment-format": "off",
+		"no-console": "off",
+		"no-bitwise": "allow"
+	}
+}
