@@ -31,7 +31,7 @@ import { dayOfWeek } from '@ouroboros/dates';
 
 // dow = Date('2022-09-19 00:00:00')
 // (assuming today is '2022-09-22 11:23:00' a Thursday)
-let dow = dayOfWeek(1) // Get Monday
+let dow = dayOfWeek(1); // Get Monday
 
 // dow = Date('2022-09-23 00:00:00')
 // (assuming today is '2022-09-22 11:23:00' a Thursday)
@@ -55,7 +55,7 @@ import { elapsed } from '@ouroboros/dates';
 let s;
 
 // s = '10'
-s = elapsed(10)
+s = elapsed(10);
 
 // s = '0:10'
 s = elapsed(10, {show_zero_minutes: true});
@@ -105,15 +105,17 @@ Returns a nicely formatted date string in a modified ISO format suitable for DBs
 ```javascript
 import { iso } from '@ouroboros/dates';
 
+let s;
+
 // s = '1981-05-02 16:23:00'
-let s = iso(357668580);
+s = iso(357668580);
 
 // s = '1981-05-02'
-let s = iso(357668580, false)
+s = iso(357668580, false);
 
 // assuming today is '2022-09-22 11:23:00' a Thursday
 // s = '2022-09-22'
-let s = iso(new Date(), false);
+s = iso(new Date(), false);
 ```
 ### isToday
 Returns true if the passed date corresponds to the current date.
@@ -141,21 +143,23 @@ let d;
 
 // assuming today is '2022-09-22 11:23:00' a Thursday
 // d = Date('2022-09-23 00:00:00')
-d = nextDayOfWeek(5) // Get Friday
+d = nextDayOfWeek(5); // Get Friday
 
 // d = Date('2022-09-27 00:00:00')
-d = nextDayOfWeek(2) // Get Tuesday
+d = nextDayOfWeek(2); // Get Tuesday
 
 // d = Date('2022-10-04 00:00:00')
-d = nextDayOfWeek(2, 2) // Get Tuesday in 2nd week
+d = nextDayOfWeek(2, 2); // Get Tuesday in 2nd week
 
 // d = Date('2022-10-11 00:00:00')
-d = nextDayOfWeek(2, 3) // Get Tuesday in 3rd week
+d = nextDayOfWeek(2, 3); // Get Tuesday in 3rd week
 ```
 ### nice
 Returns a date formatted in the client's local format
 ```javascript
 import { nice } from '@ouroboros/dates';
+
+let s;
 
 // assuming today is '2022-09-22 11:23:00' a Thursday
 // s = 'Thursday, September 22, 2022 11:23:00'
@@ -182,16 +186,16 @@ let d;
 
 // assuming today is '2022-09-22 11:23:00' a Thursday
 // d = Date('2022-09-16 00:00:00')
-d = previousDayOfWeek(5) // Get Friday
+d = previousDayOfWeek(5); // Get Friday
 
 // d = Date('2022-09-20 00:00:00')
-d = previousDayOfWeek(2) // Get Tuesday
+d = previousDayOfWeek(2); // Get Tuesday
 
 // d = Date('2022-09-13 00:00:00')
-d = previousDayOfWeek(2, 2) // Get Tuesday in 2nd week
+d = previousDayOfWeek(2, 2); // Get Tuesday in 2nd week
 
 // d = Date('2022-09-06 00:00:00')
-d = previousDayOfWeek(2, 3) // Get Tuesday in 3rd week
+d = previousDayOfWeek(2, 3); // Get Tuesday in 3rd week
 ```
 ### relative
 Returns a date string description relative to the current day.
