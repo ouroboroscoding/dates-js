@@ -7,6 +7,13 @@
  * @copyright Ouroboros Coding Inc.
  * @created 2021-05-22
  */
+export type elapsedOptions = {
+    show_minutes?: boolean;
+    show_seconds?: boolean;
+    show_zero_hours?: boolean;
+    show_zero_minutes?: boolean;
+};
+export type validDate = number | string | Date;
 /**
  * Age
  *
@@ -14,10 +21,10 @@
  *
  * @name age
  * @access public
- * @param {number | string | Date} d The date of birth
- * @return {number}
+ * @param d The date of birth
+ * @returns a number representing the age
  */
-export declare function age(d: number | string | Date): number;
+export declare function age(d: validDate): number;
 /**
  * Day of Week
  *
@@ -25,17 +32,10 @@ export declare function age(d: number | string | Date): number;
  *
  * @name DateDOW
  * @access public
- * @param {number} dow The day of the week we want
- * @return Date
+ * @param dow The day of the week we want
+ * @returns a new Date
  */
 export declare function dayOfWeek(dow: number): Date;
-/** Elapsed options */
-declare type elapsedOptions = {
-    show_minutes?: boolean;
-    show_seconds?: boolean;
-    show_zero_hours?: boolean;
-    show_zero_minutes?: boolean;
-};
 /**
  * Elapsed
  *
@@ -44,9 +44,9 @@ declare type elapsedOptions = {
  *
  * @name elapsed
  * @access public
- * @param {number} seconds The seconds elapsed
- * @param {elapsedOptions | null=} opts Optional formating options
- * @return {string}
+ * @param seconds The seconds elapsed
+ * @param opts Optional formating options
+ * @returns a string describing the elapsed time
  */
 export declare function elapsed(seconds: number, opts?: elapsedOptions | null): string;
 /**
@@ -56,12 +56,12 @@ export declare function elapsed(seconds: number, opts?: elapsedOptions | null): 
  *
  * @name dateInc
  * @access public
- * @param {number} days The number of days to increment by
- * @param {number | string | Date | null=} from Optional, the date to increment from, else today
- * @param {bool=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return Date
+ * @param days The number of days to increment by
+ * @param from Optional, the date to increment from, else today
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns a new Date
  */
-export declare function increment(days?: number, from?: null, utc?: boolean): Date;
+export declare function increment(days?: number, from?: validDate | null, utc?: boolean): Date;
 /**
  * ISO
  *
@@ -70,12 +70,12 @@ export declare function increment(days?: number, from?: null, utc?: boolean): Da
  *
  * @name iso
  * @access public
- * @param {number | string | Date} d A Date instance or a timestamp value
- * @param {boolean=} time Optional, set to false to only return date with no time
- * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {string}
+ * @param d A Date instance or a timestamp value
+ * @param time Optional, set to false to only return date with no time
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns an iso formatted date string
  */
-export declare function iso(d: number | string | Date, time?: boolean, utc?: boolean): string;
+export declare function iso(d: validDate, time?: boolean, utc?: boolean): string;
 /**
  * Is Today
  *
@@ -83,11 +83,11 @@ export declare function iso(d: number | string | Date, time?: boolean, utc?: boo
  *
  * @name isToday
  * @access public
- * @param {number | string | Date} d A date object or a string/int that can be converted to a Date
+ * @param {validDate} d A date object or a string/int that can be converted to a Date
  * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {boolean}
+ * @returns true if the date is today
  */
-export declare function isToday(d: number | string | Date, utc?: boolean): boolean;
+export declare function isToday(d: validDate, utc?: boolean): boolean;
 /**
  * Next Day of Week
  *
@@ -96,9 +96,9 @@ export declare function isToday(d: number | string | Date, utc?: boolean): boole
  *
  * @name nextDayOfWeek
  * @access public
- * @param {number} dow The day of the week (Sunday is 0, Saturday is 6)
- * @param {number=} weeks Optional number of weeks in the past, defaults to 1
- * @return {Date}
+ * @param dow The day of the week (Sunday is 0, Saturday is 6)
+ * @param weeks Optional number of weeks in the past, defaults to 1
+ * @returns a new Date
  */
 export declare function nextDayOfWeek(dow: number, weeks?: number): Date;
 /**
@@ -108,14 +108,14 @@ export declare function nextDayOfWeek(dow: number, weeks?: number): Date;
  *
  * @name nice
  * @access public
- * @param {number | string | Date} d The date value
- * @param {string=} locale Optional, the locale to use to format
- * @param {'long' | 'short'=} text Optional, the type of format
- * @param {boolean=} time Optional, set to false to only return date with no time
- * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {string}
+ * @param d The date value
+ * @param locale Optional, the locale to use to format
+ * @param text Optional, the type of format
+ * @param time Optional, set to false to only return date with no time
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns a nicely formatted date
  */
-export declare function nice(d: number | string | Date, locale?: string, text?: 'long' | 'short', time?: boolean, utc?: boolean): string;
+export declare function nice(d: validDate, locale?: string, text?: 'long' | 'short', time?: boolean, utc?: boolean): string;
 /**
  * Previous Day of Week
  *
@@ -124,9 +124,9 @@ export declare function nice(d: number | string | Date, locale?: string, text?: 
  *
  * @name previousDayOfWeek
  * @access public
- * @param {number} dow The day of the week (Sunday is 0, Saturday is 6)
- * @param {number=} weeks Optional number of weeks in the past, defaults to 1
- * @return {Date}
+ * @param dow The day of the week (Sunday is 0, Saturday is 6)
+ * @param weeks Optional number of weeks in the past, defaults to 1
+ * @returns a new Date
  */
 export declare function previousDayOfWeek(dow: number, weeks?: number): Date;
 /**
@@ -136,13 +136,23 @@ export declare function previousDayOfWeek(dow: number, weeks?: number): Date;
  *
  * @name relative
  * @access public
- * @param {number | string | Date} d The date value
- * @param {string=} locale Optional, the locale to use to format
- * @param {'long' | 'short'=} text Optional, the type of format
- * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {string}
+ * @param d The date value
+ * @param locale Optional, the locale to use to format
+ * @param text Optional, the type of format
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns the relative time
  */
-export declare function relative(d: number | string | Date, locale?: string, text?: 'long' | 'short', utc?: boolean): string;
+export declare function relative(d: validDate, locale?: string, text?: 'long' | 'short', utc?: boolean): string;
+/**
+ * Timestamp
+ *
+ * Returns the current timestamp
+ *
+ * @name timestamp
+ * @access public
+ * @returns a number representing seconds since 1970-01-01
+ */
+export declare function timestamp(d?: validDate, utc?: boolean): number;
 declare const dates: {
     age: typeof age;
     dayOfWeek: typeof dayOfWeek;
@@ -154,5 +164,6 @@ declare const dates: {
     nice: typeof nice;
     previousDayOfWeek: typeof previousDayOfWeek;
     relative: typeof relative;
+    timestamp: typeof timestamp;
 };
 export default dates;

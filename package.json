@@ -1,6 +1,6 @@
 {
 	"name": "@ouroboros/dates",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "A set of functions for common javascript date problems",
 	"main": "index.js",
 	"types": "index.d.ts",
@@ -29,7 +29,7 @@
 		"typescript": "^4.8.3"
 	},
 	"dependencies": {
-		"@ouroboros/tools": "^0.1.0"
+		"@ouroboros/tools": "^0.4.1"
 	},
 	"peerDependencies": {}
 }
