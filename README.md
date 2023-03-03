@@ -217,3 +217,27 @@ s = relative('2021-10-10');
 // s = '1 sept, 2021'
 s = relative('2021-10-10', 'es-MX', 'short');
 ```
+### timestamp
+Returns an unsigned whole number representing the seconds since 1970-01-01
+```javascript
+import { timestamp } from '@ouroboros/dates';
+
+// Assuming current date is 2023-03-03 13:36:40
+//	1677850600
+timestamp();
+
+// 0
+timestamp('1970-01-01');
+
+// 357654180
+timestamp('1981-05-02 12:23:00'); // UTC
+
+// 357668580
+timestamp('1981-05-02 12:23:00', false); // EST
+
+// 357668580
+timestamp(357668580);
+
+// 1677850785
+timestamp(new Date());
+```
