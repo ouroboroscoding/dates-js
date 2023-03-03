@@ -17,13 +17,13 @@ const MS_PER_WEEK = MS_PER_DAY * 7;
  *
  * Converts values to a Date type
  *
- * @name _toDate
+ * @name toDate
  * @access private
- * @param {number | string | Date} val An integer or string
- * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {Date}
+ * @param val An integer or string
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns a new Date
  */
-function _toDate(val, utc = true) {
+function toDate(val, utc = true) {
     // If we got a timestamp
     if (typeof val === 'number') {
         return new Date(val * 1000);
@@ -59,8 +59,8 @@ function _toDate(val, utc = true) {
  *
  * @name age
  * @access public
- * @param {number | string | Date} d The date of birth
- * @return {number}
+ * @param d The date of birth
+ * @returns a number representing the age
  */
 export function age(d) {
     // Convert if not a date
@@ -84,8 +84,8 @@ export function age(d) {
  *
  * @name DateDOW
  * @access public
- * @param {number} dow The day of the week we want
- * @return Date
+ * @param dow The day of the week we want
+ * @returns a new Date
  */
 export function dayOfWeek(dow) {
     // If the day of the week is invalid
@@ -111,9 +111,9 @@ export function dayOfWeek(dow) {
  *
  * @name elapsed
  * @access public
- * @param {number} seconds The seconds elapsed
- * @param {elapsedOptions | null=} opts Optional formating options
- * @return {string}
+ * @param seconds The seconds elapsed
+ * @param opts Optional formating options
+ * @returns a string describing the elapsed time
  */
 export function elapsed(seconds, opts = null) {
     // Get the hours and remaining seconds
@@ -186,14 +186,14 @@ export function elapsed(seconds, opts = null) {
  *
  * @name dateInc
  * @access public
- * @param {number} days The number of days to increment by
- * @param {number | string | Date | null=} from Optional, the date to increment from, else today
- * @param {bool=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return Date
+ * @param days The number of days to increment by
+ * @param from Optional, the date to increment from, else today
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns a new Date
  */
 export function increment(days = 1, from = null, utc = true) {
     // If we got a from
-    const oDate = from ? _toDate(from, utc) : new Date();
+    const oDate = from === null ? new Date() : toDate(from, utc);
     // Increment the date
     oDate.setDate(oDate.getDate() + days);
     // Return the new date
@@ -207,14 +207,14 @@ export function increment(days = 1, from = null, utc = true) {
  *
  * @name iso
  * @access public
- * @param {number | string | Date} d A Date instance or a timestamp value
- * @param {boolean=} time Optional, set to false to only return date with no time
- * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {string}
+ * @param d A Date instance or a timestamp value
+ * @param time Optional, set to false to only return date with no time
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns an iso formatted date string
  */
 export function iso(d, time = true, utc = true) {
     // Make sure we have a Date instance
-    d = _toDate(d, utc);
+    d = toDate(d, utc);
     // Generate the date and return it
     const Y = '' + d.getFullYear();
     let M = '' + (d.getMonth() + 1);
@@ -253,15 +253,15 @@ export function iso(d, time = true, utc = true) {
  *
  * @name isToday
  * @access public
- * @param {number | string | Date} d A date object or a string/int that can be converted to a Date
+ * @param {validDate} d A date object or a string/int that can be converted to a Date
  * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {boolean}
+ * @returns true if the date is today
  */
 export function isToday(d, utc = true) {
     // Today's date
     const oToday = new Date();
     // Make sure we have a Date instance
-    d = _toDate(d, utc);
+    d = toDate(d, utc);
     // Compare date, month, and year
     return d.getDate() === oToday.getDate() &&
         d.getMonth() === oToday.getMonth() &&
@@ -275,9 +275,9 @@ export function isToday(d, utc = true) {
  *
  * @name nextDayOfWeek
  * @access public
- * @param {number} dow The day of the week (Sunday is 0, Saturday is 6)
- * @param {number=} weeks Optional number of weeks in the past, defaults to 1
- * @return {Date}
+ * @param dow The day of the week (Sunday is 0, Saturday is 6)
+ * @param weeks Optional number of weeks in the past, defaults to 1
+ * @returns a new Date
  */
 export function nextDayOfWeek(dow, weeks = 1) {
     // If the day of the week is invalid
@@ -310,16 +310,16 @@ export function nextDayOfWeek(dow, weeks = 1) {
  *
  * @name nice
  * @access public
- * @param {number | string | Date} d The date value
- * @param {string=} locale Optional, the locale to use to format
- * @param {'long' | 'short'=} text Optional, the type of format
- * @param {boolean=} time Optional, set to false to only return date with no time
- * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {string}
+ * @param d The date value
+ * @param locale Optional, the locale to use to format
+ * @param text Optional, the type of format
+ * @param time Optional, set to false to only return date with no time
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns a nicely formatted date
  */
 export function nice(d, locale = 'en-US', text = 'long', time = true, utc = true) {
     // Make sure we have a Date instance
-    d = _toDate(d, utc);
+    d = toDate(d, utc);
     // Return the string
     const sDate = d.toLocaleDateString(locale, {
         day: 'numeric',
@@ -356,9 +356,9 @@ export function nice(d, locale = 'en-US', text = 'long', time = true, utc = true
  *
  * @name previousDayOfWeek
  * @access public
- * @param {number} dow The day of the week (Sunday is 0, Saturday is 6)
- * @param {number=} weeks Optional number of weeks in the past, defaults to 1
- * @return {Date}
+ * @param dow The day of the week (Sunday is 0, Saturday is 6)
+ * @param weeks Optional number of weeks in the past, defaults to 1
+ * @returns a new Date
  */
 export function previousDayOfWeek(dow, weeks = 1) {
     // If the day of the week is invalid
@@ -391,17 +391,17 @@ export function previousDayOfWeek(dow, weeks = 1) {
  *
  * @name relative
  * @access public
- * @param {number | string | Date} d The date value
- * @param {string=} locale Optional, the locale to use to format
- * @param {'long' | 'short'=} text Optional, the type of format
- * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
- * @return {string}
+ * @param d The date value
+ * @param locale Optional, the locale to use to format
+ * @param text Optional, the type of format
+ * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @returns the relative time
  */
 export function relative(d, locale = 'en-US', text = 'long', utc = true) {
     // Today's date
     const oToday = new Date();
     // Make sure we have a Date instance
-    d = _toDate(d, utc);
+    d = toDate(d, utc);
     // Compare date, month, and year
     const bToday = (d.getDate() === oToday.getDate() &&
         d.getMonth() === oToday.getMonth() &&
@@ -427,9 +427,28 @@ export function relative(d, locale = 'en-US', text = 'long', utc = true) {
     // Return the string
     return sRet;
 }
+/**
+ * Timestamp
+ *
+ * Returns the current timestamp
+ *
+ * @name timestamp
+ * @access public
+ * @returns a number representing seconds since 1970-01-01
+ */
+export function timestamp(d, utc = true) {
+    // If no date was passed, get the current time
+    if (d === undefined) {
+        return (Date.now() / 1000);
+    }
+    // Else, convert the date
+    d = toDate(d, utc);
+    // Return the timestamp of the date passed
+    return (d.getTime() / 1000);
+}
 // Default export
 const dates = {
     age, dayOfWeek, elapsed, increment, iso, isToday, nextDayOfWeek,
-    nice, previousDayOfWeek, relative
+    nice, previousDayOfWeek, relative, timestamp
 };
 export default dates;
