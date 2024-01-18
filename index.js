@@ -439,12 +439,12 @@ export function relative(d, locale = 'en-US', text = 'long', utc = true) {
 export function timestamp(d, utc = true) {
     // If no date was passed, get the current time
     if (d === undefined) {
-        return (Date.now() / 1000);
+        return Math.floor(Date.now() / 1000);
     }
     // Else, convert the date
     d = toDate(d, utc);
     // Return the timestamp of the date passed
-    return (d.getTime() / 1000);
+    return Math.floor(d.getTime() / 1000);
 }
 // Default export
 const dates = {
