@@ -394,7 +394,7 @@ export function nice(d: validDate, locale: string = 'en-US', text: 'long' | 'sho
 	// Make sure we have a Date instance
 	d = toDate(d, utc);
 
-	// Return the string
+	// Generate the date string
 	const sDate = d.toLocaleDateString(locale, {
 		day: 'numeric',
 		month: text,
@@ -402,26 +402,16 @@ export function nice(d: validDate, locale: string = 'en-US', text: 'long' | 'sho
 		year: 'numeric'
 	});
 
-	// If we want the time
-	if(time) {
-
-		// Generate the time
-		const t = ['', '', ''];
-		t[0] += d.getHours();
-		if(t[0].length === 1) t[0] = '0' + t[0];
-		t[1] += d.getMinutes();
-		if(t[1].length === 1) t[1] = '0' + t[1];
-		t[2] += d.getSeconds();
-		if(t[2].length === 1) t[2] = '0' + t[2];
-
-		// Return the date with the time
-		return sDate + ' ' + t.join(':');
-	}
-
-	// Else, just return the date
-	else {
+	// If we don't want time
+	if(!time) {
 		return sDate;
 	}
+
+	// Generate the time
+	const sTime = d.toLocaleTimeString(locale);
+
+	// Return the date with the time
+	return `${sDate} ${sTime}`;
 }
 
 /**
