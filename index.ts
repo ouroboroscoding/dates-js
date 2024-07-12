@@ -47,17 +47,37 @@ function toDate(val: validDate, utc: boolean = true): Date {
 
 		// If it's only ten characters, add the time and timezone
 		if(val.length === 10) {
-			return new Date(val + 'T00:00:00' + (utc ? '-0000' : ''));
+			return new Date(
+				val +
+				'T00:00:00' +
+				(utc ? '-0000' : '')
+			);
+		}
+
+		// If it's 16 characters, replace any space with T, add the seconds and
+		//	add the timezone
+		if(val.length === 16) {
+			return new Date(
+				val.replace(' ', 'T') +
+				':00' +
+				(utc ? '-0000' : '')
+			);
 		}
 
 		// If it's 19 characters, replace any space with T and add the timezone
 		if(val.length === 19) {
-			return new Date(val.replace(' ', 'T') + (utc ? '-0000' : ''));
+			return new Date(
+				val.replace(' ', 'T') +
+				(utc ? '-0000' : '')
+			);
 		}
 
 		// If it's over 19 characters and has a period
 		if(val.length > 19 && val.substring(19,20) === '.') {
-			return new Date(val.substring(0,19).replace(' ', 'T') + (utc ? '-0000' : ''));
+			return new Date(
+				val.substring(0,19).replace(' ', 'T') +
+				(utc ? '-0000' : '')
+			);
 		}
 
 		// If it's 24 characters, assume it's good
