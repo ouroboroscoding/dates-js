@@ -286,43 +286,50 @@ export function increment(days: number = 1, from: validDate | null = null, utc: 
  * @param d A Date instance or a timestamp value
  * @param time Optional, set to false to only return date with no time
  * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @param numbersOnly Optional, default set to false, if true no dashes, colons,
+ * 	or spaces will be included, only numbers e.g. 20250211092213
  * @returns an iso formatted date string
  */
-export function iso(d: validDate, time: boolean = true, utc:boolean = true): string {
+export function iso(
+	d: validDate,
+	time: boolean = true,
+	utc:boolean = true,
+	numbersOnly:boolean = false
+): string {
 
 	// Make sure we have a Date instance
 	d = toDate(d, utc);
 
 	// Generate the date and return it
-	const Y = '' + d.getFullYear();
-	let M = '' + (d.getMonth() + 1);
-	if(M.length === 1) M = '0' + M;
-	let D = '' + d.getDate();
-	if(D.length === 1) D = '0' + D;
+	const _ = ['', '', ''];
+	_[0] = '' + d.getFullYear();
+	_[1] = '' + (d.getMonth() + 1);
+	if(_[1].length === 1) _[1] = '0' + _[1];
+	_[2] = '' + d.getDate();
+	if(_[2].length === 1) _[2] = '0' + _[2];
 
-	// Generate the date
-	const sDate = Y + '-' + M + '-' + D;
+	// Generate date string
+	const sDate = _.join(numbersOnly ? '' : '-')
 
-	// If we want the time
-	if(time) {
-
-		// Generate the time
-		const t = ['', '', ''];
-		t[0] += d.getHours();
-		if(t[0].length === 1) t[0] = '0' + t[0];
-		t[1] += d.getMinutes();
-		if(t[1].length === 1) t[1] = '0' + t[1];
-		t[2] += d.getSeconds();
-		if(t[2].length === 1) t[2] = '0' + t[2];
-
-		// Return the date with the time
-		return sDate + ' ' + t.join(':')
+	// If we don't want the time
+	if(!time) {
+		return sDate;
 	}
 
-	// Else, just return the date
-	else {
-		return sDate
-	}
+	// Generate the time
+	const t = ['', '', ''];
+	t[0] += d.getHours();
+	if(t[0].length === 1) t[0] = '0' + t[0];
+	t[1] += d.getMinutes();
+	if(t[1].length === 1) t[1] = '0' + t[1];
+	t[2] += d.getSeconds();
+	if(t[2].length === 1) t[2] = '0' + t[2];
+
+	// Generate the time
+	const sTime = t.join(numbersOnly ? '' : ':');
+
+	// Combine date and time
+	return numbersOnly ? `${sDate}${sTime}` : `${sDate} ${sTime}`;
 }
 
 /**
