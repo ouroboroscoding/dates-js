@@ -73,9 +73,11 @@ export declare function increment(days?: number, from?: validDate | null, utc?: 
  * @param d A Date instance or a timestamp value
  * @param time Optional, set to false to only return date with no time
  * @param utc Optional, default set to true, assumes GMT timezone where missing
+ * @param numbersOnly Optional, default set to false, if true no dashes, colons,
+ * 	or spaces will be included, only numbers e.g. 20250211092213
  * @returns an iso formatted date string
  */
-export declare function iso(d: validDate, time?: boolean, utc?: boolean): string;
+export declare function iso(d: validDate, time?: boolean, utc?: boolean, numbersOnly?: boolean): string;
 /**
  * Is Today
  *
