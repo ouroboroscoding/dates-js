@@ -10,6 +10,18 @@ npm
 npm install @ouroboros/dates
 ```
 ## Functions
+- [age](#age)
+- [dayOfWeek](#dayofweek)
+- [elapsed](#elapsed)
+- [increment](#increment)
+- [iso](#iso)
+- [isToday](#istoday)
+- [nextDayOfWeek](#nextdayofweek)
+- [nice](#nice)
+- [previousDayOfWeek](#previousdayofweek)
+- [relative](#relative)
+- [timeframe](#timeframe)
+- [timestamp](#timestamp)
 
 ### age
 Returns the current age of someone based on date of birth.
@@ -24,6 +36,9 @@ yearsOld = age('1981-05-02');
 // yearsOld = 20 (assuming today is '2022-09-22 11:23:00' a Thursday)
 yearsOld = age(1032634800);
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### dayOfWeek
 Returns the day of the week in the current week, regardless of past or future. Weeks start on Sunday (0) and end on Saturday (6) according to Javascript.
 ```javascript
@@ -37,6 +52,9 @@ let dow = dayOfWeek(1); // Get Monday
 // (assuming today is '2022-09-22 11:23:00' a Thursday)
 dow = dayOfWeek(5); // Get Friday
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### elapsed
 Takes the time in seconds and converts it to human readable hours, minutes, seconds.
 
@@ -81,6 +99,9 @@ s = elapsed(18000, {show_seconds: false});
 // s = '5'
 s = elapsed(18000, {show_minutes: false});
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### increment
 Returns a date incremented by the given days. Use negative to decrement.
 ```javascript
@@ -100,6 +121,9 @@ d = increment(-3, d);
 // d = Date('2022-09-18 11:23:00')
 d = increment(-4);
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### iso
 Returns a nicely formatted date string in a modified ISO format suitable for DBs and most systems.
 ```javascript
@@ -117,6 +141,9 @@ s = iso(357668580, false);
 // s = '2022-09-22'
 s = iso(new Date(), false);
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### isToday
 Returns true if the passed date corresponds to the current date.
 ```javascript
@@ -134,6 +161,9 @@ b = isToday(increment(1));
 b = isToday('2022-09-21');
 b = isToday(1663946580);
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### nextDayOfWeek
 Allows you to get the date of a specific day of the week in the next week, or many weeks in the future.
 ```javascript
@@ -154,6 +184,9 @@ d = nextDayOfWeek(2, 2); // Get Tuesday in 2nd week
 // d = Date('2022-10-11 00:00:00')
 d = nextDayOfWeek(2, 3); // Get Tuesday in 3rd week
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### nice
 Returns a date formatted in the client's local format
 ```javascript
@@ -177,6 +210,9 @@ s = nice(new Date(), 'fr-FR', 'short', false);
 // s = 'jueves, 22 de septiembre de 2022, 11:23:00'
 s = nice(new Date(), 'sp-MX');
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### previousDayOfWeek
 Allows you to get the date of a specific day of the week in the previous week, or many previous weeks, before.
 ```javascript
@@ -197,6 +233,9 @@ d = previousDayOfWeek(2, 2); // Get Tuesday in 2nd week
 // d = Date('2022-09-06 00:00:00')
 d = previousDayOfWeek(2, 3); // Get Tuesday in 3rd week
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### relative
 Returns a date string description relative to the current day.
 ```javascript
@@ -217,6 +256,38 @@ s = relative('2021-10-10');
 // s = '1 sept, 2021'
 s = relative('2021-10-10', 'es-MX', 'short');
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
+### timeframe
+Returns a start and end date in **date**, **datetime**, or **timestamp**
+assuming EOD today as the end date, and then decrementing `count` of `type` from
+there to get the start date.
+
+For example. If we ran this function on the **21st of June, 2025**, with the
+following examples
+```javascript
+import { timeframe } from '@ouroboros/dates';
+
+// 15 days ago as dates
+//	['2025-06-06', '2025-06-21']
+timeframe(15, 'days', 'date');
+
+// 2 weeks ago as date/times
+//	['2025-06-07 00:00:00', '2025-06-21 23:59:59']
+timeframe(2, 'weeks', 'datetime');
+
+// 3 months ago in timestamps
+//	[1742529600, 1750564799]
+timeframe(3, 'months', 'timestamp');
+
+// 1 year ago as dates
+//	['2024-06-21', '2025-06-21']
+timeframe(1, 'year', 'date');
+```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]
+
 ### timestamp
 Returns an unsigned whole number representing the seconds since 1970-01-01
 ```javascript
@@ -241,3 +312,5 @@ timestamp(357668580);
 // 1677850785
 timestamp(new Date());
 ```
+
+[ [top](#ouroborosdates) / [functions](#functions) ]

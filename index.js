@@ -266,7 +266,7 @@ export function iso(d, time = true, utc = true, numbersOnly = false) {
  *
  * @name isToday
  * @access public
- * @param {validDate} d A date object or a string/int that can be converted to a Date
+ * @param {ValidDate} d A date object or a string/int that can be converted to a Date
  * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
  * @returns true if the date is today
  */
@@ -429,6 +429,60 @@ export function relative(d, locale = 'en-US', text = 'long', utc = true) {
     return sRet;
 }
 /**
+ * Timeframe
+ *
+ * Calculates a timeframe given today, and decrementing by `count` number of
+ * `type`. For example, 2 weeks ago, 15 days ago, 13 months ago, 1 year ago.
+ *
+ * @name timeframe
+ * @access public
+ * @param count The number of `type` to count back to
+ * @param type The type of `count` to decrement by. Valid values are 'day', 'week', 'month', and 'year'
+ * @param format The format to return it in, 'date', 'datetime', or 'timestamp'
+ * @returns string[] | number[] based on `format`
+ */
+export function timeframe(count, type, format = 'date') {
+    // Set the end date as today
+    const oEOD = new Date();
+    // Reset the hours/minutes/seconds to the last second of the day
+    oEOD.setHours(23, 59, 59);
+    // Initialise the start date with today
+    const oSOD = new Date();
+    // Reset the hours/minutes/seconds to the first second of the day
+    oSOD.setHours(0, 0, 0);
+    switch (type) {
+        case 'day':
+        case 'days':
+            increment(-count, oSOD);
+            break;
+        case 'week':
+        case 'weeks':
+            increment(-(count * 7), oSOD);
+            break;
+        case 'month':
+        case 'months':
+            oSOD.setMonth(oSOD.getMonth() - count);
+            break;
+        case 'year':
+        case 'years':
+            oSOD.setFullYear(oSOD.getFullYear() - count);
+            break;
+        default:
+            throw new Error(`timeframe type invalid. Must be one of 'day', 'week', 'month', or 'year'. Received: ${type}`);
+    }
+    // Based on the format requested, return the start and end values
+    switch (format) {
+        case 'date':
+            return [iso(oSOD, false, false), iso(oEOD, false, false)];
+        case 'datetime':
+            return [iso(oSOD, true, false), iso(oEOD, true, false)];
+        case 'timestamp':
+            return [timestamp(oSOD), timestamp(oEOD)];
+        default:
+            throw new Error(`timeframe format invalid. Must be one of 'date', 'datetime', or 'timestamp'. Received: ${type}`);
+    }
+}
+/**
  * Timestamp
  *
  * Returns the current timestamp
@@ -450,6 +504,6 @@ export function timestamp(d, utc = true) {
 // Default export
 const dates = {
     age, dayOfWeek, elapsed, increment, iso, isToday, nextDayOfWeek,
-    nice, previousDayOfWeek, relative, timestamp
+    nice, previousDayOfWeek, relative, timeframe, timestamp
 };
 export default dates;

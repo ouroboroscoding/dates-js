@@ -16,13 +16,16 @@ const MS_PER_DAY: number = 86400000;
 const MS_PER_WEEK: number = MS_PER_DAY * 7;
 
 // Types
-export type elapsedOptions = {
+export type ElapsedOptions = {
 	show_minutes?: boolean
 	show_seconds?: boolean,
 	show_zero_hours?: boolean,
 	show_zero_minutes?: boolean
 }
-export type validDate = number | string | Date;
+export type TimeframeFormat = 'date' | 'datetime' | 'timestamp';
+export type TimeframeReturn<T extends string | number> = [ T, T ];
+export type TimeframeType = 'day' | 'days' | 'week' | 'weeks' | 'month' | 'months' | 'year' | 'years';
+export type ValidDate = number | string | Date;
 
 /**
  * To Date
@@ -35,7 +38,7 @@ export type validDate = number | string | Date;
  * @param utc Optional, default set to true, assumes GMT timezone where missing
  * @returns a new Date
  */
-function toDate(val: validDate, utc: boolean = true): Date {
+function toDate(val: ValidDate, utc: boolean = true): Date {
 
 	// If we got a timestamp
 	if(typeof val === 'number') {
@@ -103,7 +106,7 @@ function toDate(val: validDate, utc: boolean = true): Date {
  * @param d The date of birth
  * @returns a number representing the age
  */
-export function age(d: validDate): number {
+export function age(d: ValidDate): number {
 	// Convert if not a date
 	if(typeof d === 'number') {
 		d = new Date(d*1000);
@@ -165,7 +168,7 @@ export function dayOfWeek(dow: number): Date {
  * @param opts Optional formating options
  * @returns a string describing the elapsed time
  */
-export function elapsed(seconds: number, opts: elapsedOptions | null = null): string {
+export function elapsed(seconds: number, opts: ElapsedOptions | null = null): string {
 
 	// Get the hours and remaining seconds
 	const [h, r] = divmod(seconds, 3600);
@@ -263,7 +266,7 @@ export function elapsed(seconds: number, opts: elapsedOptions | null = null): st
  * @param utc Optional, default set to true, assumes GMT timezone where missing
  * @returns a new Date
  */
-export function increment(days: number = 1, from: validDate | null = null, utc: boolean = true) {
+export function increment(days: number = 1, from: ValidDate | null = null, utc: boolean = true) {
 
 	// If we got a from
 	const oDate = from === null ? new Date() : toDate(from, utc);
@@ -291,7 +294,7 @@ export function increment(days: number = 1, from: validDate | null = null, utc: 
  * @returns an iso formatted date string
  */
 export function iso(
-	d: validDate,
+	d: ValidDate,
 	time: boolean = true,
 	utc:boolean = true,
 	numbersOnly:boolean = false
@@ -339,11 +342,11 @@ export function iso(
  *
  * @name isToday
  * @access public
- * @param {validDate} d A date object or a string/int that can be converted to a Date
+ * @param {ValidDate} d A date object or a string/int that can be converted to a Date
  * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
  * @returns true if the date is today
  */
-export function isToday(d: validDate, utc: boolean = true): boolean {
+export function isToday(d: ValidDate, utc: boolean = true): boolean {
 
 	// Today's date
 	const oToday = new Date();
@@ -416,7 +419,7 @@ export function nextDayOfWeek(dow: number, weeks: number = 1): Date {
  * @param utc Optional, default set to true, assumes GMT timezone where missing
  * @returns a nicely formatted date
  */
-export function nice(d: validDate, locale: string = 'en-US', text: 'long' | 'short' = 'long', time:boolean = true, utc: boolean = true): string {
+export function nice(d: ValidDate, locale: string = 'en-US', text: 'long' | 'short' = 'long', time:boolean = true, utc: boolean = true): string {
 
 	// Make sure we have a Date instance
 	d = toDate(d, utc);
@@ -499,7 +502,7 @@ export function previousDayOfWeek(dow: number, weeks: number = 1): Date {
  * @param utc Optional, default set to true, assumes GMT timezone where missing
  * @returns the relative time
  */
-export function relative(d: validDate, locale: string = 'en-US', text: 'long' | 'short'='long', utc: boolean = true): string {
+export function relative(d: ValidDate, locale: string = 'en-US', text: 'long' | 'short'='long', utc: boolean = true): string {
 
 	// Today's date
 	const oToday = new Date();
@@ -537,6 +540,75 @@ export function relative(d: validDate, locale: string = 'en-US', text: 'long' | 
 }
 
 /**
+ * Timeframe
+ *
+ * Calculates a timeframe given today, and decrementing by `count` number of
+ * `type`. For example, 2 weeks ago, 15 days ago, 13 months ago, 1 year ago.
+ *
+ * @name timeframe
+ * @access public
+ * @param count The number of `type` to count back to
+ * @param type The type of `count` to decrement by. Valid values are 'day', 'week', 'month', and 'year'
+ * @param format The format to return it in, 'date', 'datetime', or 'timestamp'
+ * @returns string[] | number[] based on `format`
+ */
+export function timeframe(
+	count: number,
+	type: TimeframeType,
+	format: TimeframeFormat = 'date',
+): TimeframeReturn<string | number> {
+
+	// Set the end date as today
+	const oEOD = new Date();
+
+	// Reset the hours/minutes/seconds to the last second of the day
+	oEOD.setHours(23,59,59);
+
+	// Initialise the start date with today
+	const oSOD = new Date();
+
+	// Reset the hours/minutes/seconds to the first second of the day
+	oSOD.setHours(0,0,0);
+
+	switch(type) {
+		case 'day':
+		case 'days':
+			increment(-count, oSOD);
+			break
+		case 'week':
+		case 'weeks':
+			increment(-(count*7), oSOD);
+			break;
+		case 'month':
+		case 'months':
+			oSOD.setMonth(oSOD.getMonth() - count);
+			break;
+		case 'year':
+		case 'years':
+			oSOD.setFullYear(oSOD.getFullYear() - count);
+			break
+		default:
+			throw new Error(
+				`timeframe type invalid. Must be one of 'day', 'week', 'month', or 'year'. Received: ${type}`
+			);
+	}
+
+	// Based on the format requested, return the start and end values
+	switch(format) {
+		case 'date':
+			return [ iso(oSOD, false, false), iso(oEOD, false, false) ];
+		case 'datetime':
+			return [ iso(oSOD, true, false), iso(oEOD, true, false) ];
+		case 'timestamp':
+			return [ timestamp(oSOD), timestamp(oEOD) ];
+		default:
+			throw new Error(
+				`timeframe format invalid. Must be one of 'date', 'datetime', or 'timestamp'. Received: ${type}`
+			);
+	}
+}
+
+/**
  * Timestamp
  *
  * Returns the current timestamp
@@ -545,7 +617,7 @@ export function relative(d: validDate, locale: string = 'en-US', text: 'long' | 
  * @access public
  * @returns a number representing seconds since 1970-01-01
  */
-export function timestamp(d?: validDate, utc: boolean = true): number {
+export function timestamp(d?: ValidDate, utc: boolean = true): number {
 
 	// If no date was passed, get the current time
 	if(d === undefined) {
@@ -562,6 +634,6 @@ export function timestamp(d?: validDate, utc: boolean = true): number {
 // Default export
 const dates = {
 	age, dayOfWeek, elapsed, increment, iso, isToday, nextDayOfWeek,
-	nice, previousDayOfWeek, relative, timestamp
+	nice, previousDayOfWeek, relative, timeframe, timestamp
 };
 export default dates;
