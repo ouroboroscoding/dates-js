@@ -7,13 +7,16 @@
  * @copyright Ouroboros Coding Inc.
  * @created 2021-05-22
  */
-export type elapsedOptions = {
+export type ElapsedOptions = {
     show_minutes?: boolean;
     show_seconds?: boolean;
     show_zero_hours?: boolean;
     show_zero_minutes?: boolean;
 };
-export type validDate = number | string | Date;
+export type TimeframeFormat = 'date' | 'datetime' | 'timestamp';
+export type TimeframeReturn<T extends string | number> = [T, T];
+export type TimeframeType = 'day' | 'days' | 'week' | 'weeks' | 'month' | 'months' | 'year' | 'years';
+export type ValidDate = number | string | Date;
 /**
  * Age
  *
@@ -24,7 +27,7 @@ export type validDate = number | string | Date;
  * @param d The date of birth
  * @returns a number representing the age
  */
-export declare function age(d: validDate): number;
+export declare function age(d: ValidDate): number;
 /**
  * Day of Week
  *
@@ -48,7 +51,7 @@ export declare function dayOfWeek(dow: number): Date;
  * @param opts Optional formating options
  * @returns a string describing the elapsed time
  */
-export declare function elapsed(seconds: number, opts?: elapsedOptions | null): string;
+export declare function elapsed(seconds: number, opts?: ElapsedOptions | null): string;
 /**
  * Increment
  *
@@ -61,7 +64,7 @@ export declare function elapsed(seconds: number, opts?: elapsedOptions | null): 
  * @param utc Optional, default set to true, assumes GMT timezone where missing
  * @returns a new Date
  */
-export declare function increment(days?: number, from?: validDate | null, utc?: boolean): Date;
+export declare function increment(days?: number, from?: ValidDate | null, utc?: boolean): Date;
 /**
  * ISO
  *
@@ -77,7 +80,7 @@ export declare function increment(days?: number, from?: validDate | null, utc?: 
  * 	or spaces will be included, only numbers e.g. 20250211092213
  * @returns an iso formatted date string
  */
-export declare function iso(d: validDate, time?: boolean, utc?: boolean, numbersOnly?: boolean): string;
+export declare function iso(d: ValidDate, time?: boolean, utc?: boolean, numbersOnly?: boolean): string;
 /**
  * Is Today
  *
@@ -85,11 +88,11 @@ export declare function iso(d: validDate, time?: boolean, utc?: boolean, numbers
  *
  * @name isToday
  * @access public
- * @param {validDate} d A date object or a string/int that can be converted to a Date
+ * @param {ValidDate} d A date object or a string/int that can be converted to a Date
  * @param {boolean=} utc Optional, default set to true, assumes GMT timezone where missing
  * @returns true if the date is today
  */
-export declare function isToday(d: validDate, utc?: boolean): boolean;
+export declare function isToday(d: ValidDate, utc?: boolean): boolean;
 /**
  * Next Day of Week
  *
@@ -117,7 +120,7 @@ export declare function nextDayOfWeek(dow: number, weeks?: number): Date;
  * @param utc Optional, default set to true, assumes GMT timezone where missing
  * @returns a nicely formatted date
  */
-export declare function nice(d: validDate, locale?: string, text?: 'long' | 'short', time?: boolean, utc?: boolean): string;
+export declare function nice(d: ValidDate, locale?: string, text?: 'long' | 'short', time?: boolean, utc?: boolean): string;
 /**
  * Previous Day of Week
  *
@@ -144,7 +147,21 @@ export declare function previousDayOfWeek(dow: number, weeks?: number): Date;
  * @param utc Optional, default set to true, assumes GMT timezone where missing
  * @returns the relative time
  */
-export declare function relative(d: validDate, locale?: string, text?: 'long' | 'short', utc?: boolean): string;
+export declare function relative(d: ValidDate, locale?: string, text?: 'long' | 'short', utc?: boolean): string;
+/**
+ * Timeframe
+ *
+ * Calculates a timeframe given today, and decrementing by `count` number of
+ * `type`. For example, 2 weeks ago, 15 days ago, 13 months ago, 1 year ago.
+ *
+ * @name timeframe
+ * @access public
+ * @param count The number of `type` to count back to
+ * @param type The type of `count` to decrement by. Valid values are 'day', 'week', 'month', and 'year'
+ * @param format The format to return it in, 'date', 'datetime', or 'timestamp'
+ * @returns string[] | number[] based on `format`
+ */
+export declare function timeframe(count: number, type: TimeframeType, format?: TimeframeFormat): TimeframeReturn<string | number>;
 /**
  * Timestamp
  *
@@ -154,7 +171,7 @@ export declare function relative(d: validDate, locale?: string, text?: 'long' | 
  * @access public
  * @returns a number representing seconds since 1970-01-01
  */
-export declare function timestamp(d?: validDate, utc?: boolean): number;
+export declare function timestamp(d?: ValidDate, utc?: boolean): number;
 declare const dates: {
     age: typeof age;
     dayOfWeek: typeof dayOfWeek;
@@ -166,6 +183,7 @@ declare const dates: {
     nice: typeof nice;
     previousDayOfWeek: typeof previousDayOfWeek;
     relative: typeof relative;
+    timeframe: typeof timeframe;
     timestamp: typeof timestamp;
 };
 export default dates;
